@@ -13,7 +13,7 @@ namespace StockManager.Tests
         {
             //Arrange
             var viewModel = new StockPanelViewModel();
-            var collection = new ObservableCollection<Model.Stock>();
+            var collection = new ObservableCollection<Stock>();
 
             //Act
             var result = viewModel.GenerateName(StockType.Equity, collection);
@@ -27,7 +27,7 @@ namespace StockManager.Tests
         {
             //Arrange
             var viewModel = new StockPanelViewModel();
-            var collection = new ObservableCollection<Model.Stock>();
+            var collection = new ObservableCollection<Stock>();
             collection.Add(new Stock { Type = StockType.Equity });
 
             //Act
@@ -42,7 +42,7 @@ namespace StockManager.Tests
         {
             //Arrange
             var viewModel = new StockPanelViewModel();
-            var collection = new ObservableCollection<Model.Stock>();
+            var collection = new ObservableCollection<Stock>();
 
             //Act
             var result = viewModel.GenerateName(StockType.Bond, collection);
@@ -56,7 +56,7 @@ namespace StockManager.Tests
         {
             //Arrange
             var viewModel = new StockPanelViewModel();
-            var collection = new ObservableCollection<Model.Stock>();
+            var collection = new ObservableCollection<Stock>();
             collection.Add(new Stock { Type = StockType.Bond });
 
             //Act
@@ -114,7 +114,7 @@ namespace StockManager.Tests
         {
             //Arrange
             var viewModel = new StockPanelViewModel();
-            var collection = new ObservableCollection<Model.Stock>();
+            var collection = new ObservableCollection<Stock>();
             collection.Add(new Stock { MarketValue = 1.0 });
 
             //Act
@@ -129,7 +129,7 @@ namespace StockManager.Tests
         {
             //Arrange
             var viewModel = new StockPanelViewModel();
-            var collection = new ObservableCollection<Model.Stock>();
+            var collection = new ObservableCollection<Stock>();
             collection.Add(new Stock { MarketValue = 0.0 });
 
             //Act
@@ -157,7 +157,7 @@ namespace StockManager.Tests
         {
             //Arrange
             var viewModel = new StockPanelViewModel();
-            var collection = new ObservableCollection<Model.Stock>();
+            var collection = new ObservableCollection<Stock>();
             collection.Add( new Stock { MarketValue = 3.0 });
             collection.Add( new Stock { MarketValue = 2.0 });
 

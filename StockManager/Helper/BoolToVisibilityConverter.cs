@@ -13,7 +13,7 @@ namespace StockManager.Helper
             if (boolValue)
                 return Visibility.Visible;
             else
-                return Visibility.Hidden;
+                return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
