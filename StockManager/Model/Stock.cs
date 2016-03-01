@@ -9,7 +9,7 @@ namespace StockManager.Model
         public StockType Type { get; set; }
         public String Name { get; set; }
         public double Price { get; set; }
-        public uint Quantity { get; set; }
+        public int Quantity { get; set; }
         public double MarketValue { get; set; }
         public double TransactionCost { get; set; }
         public Brush ColorName { get; set; }

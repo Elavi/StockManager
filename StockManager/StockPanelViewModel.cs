@@ -32,7 +32,7 @@ namespace StockManager
 
         private void AddStock(object obj)
         {
-            if (this.Type != null && this.Quantity > 0)
+            if (this.Type != null && this.Price > 0 && this.Quantity != 0)
             {
                 var stock = this.CreateStock((StockType)this.Type, this.Price, this.Quantity);
                 this.StockCollection.Add(stock);
@@ -49,7 +49,7 @@ namespace StockManager
             this.IsStockCreationVisibile = false;
         }
 
-        public Stock CreateStock(StockType type, double price, uint quantity)
+        public Stock CreateStock(StockType type, double price, int quantity)
         {
             var marketValue = this.GenerateMarketValue(price, quantity);
             var name = this.GenerateName(type, this.StockCollection);
@@ -84,8 +84,10 @@ namespace StockManager
             return stockCollection.Count(a => a.Type == type) + 1;
         }
 
-        public double GenerateMarketValue(double price, uint quantity)
+        public double GenerateMarketValue(double price, int quantity)
         {
+            if (price <= 0 && quantity == 0)
+                return 0;
             return price * quantity;
         }
 
@@ -136,9 +138,9 @@ namespace StockManager
 
         private void RefreshSummary()
         {
-            this.EquityNumber = (uint)this.StockCollection.Where(a => a.Type == StockType.Equity).Sum(a => a.Quantity);
-            this.BondNumber = (uint)this.StockCollection.Where(a => a.Type == StockType.Bond).Sum(a => a.Quantity);
-            this.AllNumber = (uint)this.StockCollection.Sum (a => a.Quantity);
+            this.EquityNumber = this.StockCollection.Where(a => a.Type == StockType.Equity).Sum(a => a.Quantity);
+            this.BondNumber = this.StockCollection.Where(a => a.Type == StockType.Bond).Sum(a => a.Quantity);
+            this.AllNumber = this.StockCollection.Sum (a => a.Quantity);
             this.EquityStockWeight = this.StockCollection.Where( a => a.Type == StockType.Equity).Sum(a => a.StockWeight);
             this.BondStockWeight = this.StockCollection.Where(a => a.Type == StockType.Bond).Sum(a => a.StockWeight);
             this.AllStockWeight = this.StockCollection.Sum(a => a.StockWeight);
@@ -169,8 +171,8 @@ namespace StockManager
             }
         }
 
-        private uint quantity;
-        public uint Quantity
+        private int quantity;
+        public int Quantity
         {
             get { return quantity; }
             set
@@ -180,8 +182,8 @@ namespace StockManager
             }
         }
 
-        private uint equityNumber;
-        public uint EquityNumber
+        private int equityNumber;
+        public int EquityNumber
         {
             get { return equityNumber; }
             set
@@ -191,8 +193,8 @@ namespace StockManager
             }
         }
 
-        private uint bondNumber;
-        public uint BondNumber
+        private int bondNumber;
+        public int BondNumber
         {
             get { return bondNumber; }
             set
@@ -202,8 +204,8 @@ namespace StockManager
             }
         }
 
-        private uint allNumber;
-        public uint AllNumber
+        private int allNumber;
+        public int AllNumber
         {
             get { return allNumber; }
             set

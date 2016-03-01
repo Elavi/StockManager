@@ -80,12 +80,12 @@ namespace StockManager.Tests
         }
         
         [TestMethod]
-        public void GenerateMarketValue_PriceAboveZero()
+        public void GenerateMarketValue_QuantityAboveZero()
         {
             //Arrange
             var viewModel = new StockPanelViewModel();
             double price = 5.0;
-            uint quantity = 10;
+            int quantity = 10;
 
             //Act
             var result = viewModel.GenerateMarketValue(price, quantity);
@@ -95,12 +95,12 @@ namespace StockManager.Tests
         }
 
         [TestMethod]
-        public void GenerateMarketValue_PriceBelowZero()
+        public void GenerateMarketValue_QuantityBelowZero()
         {
             //Arrange
             var viewModel = new StockPanelViewModel();
-            double price = -5.0;
-            uint quantity = 10;
+            double price = 5.0;
+            int quantity = -10;
 
             //Act
             var result = viewModel.GenerateMarketValue(price, quantity);
