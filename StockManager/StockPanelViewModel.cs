@@ -1,43 +1,36 @@
 ﻿using StockManager.Model;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using System.ComponentModel;
-using System.Windows.Media;
+using StockManager.Core;
+using StockManager.StockCalculations;
 
 namespace StockManager
 {
     public class StockPanelViewModel : INotifyPropertyChanged
     {
+        private readonly StockCreator stockCreator;
+        const int SelectedThickness = 2;
+        const int NeutralThickness = 1;
         public StockPanelViewModel()
         {
             this.createEquityCommand = new DelegateCommand(this.CreateEquity);
             this.createBondCommand = new DelegateCommand(this.CreateBond);
             this.addCommand = new DelegateCommand(this.AddStock);
             this.cancelCommand = new DelegateCommand(this.CancelStock);
-        }
-
-        private void CreateEquity(object obj)
-        {
-            this.Type = StockType.Equity;
-            this.IsStockCreationVisibile = true;
-        }
-
-        private void CreateBond(object obj)
-        {
-            this.Type = StockType.Bond;
-            this.IsStockCreationVisibile = true;
+            this.stockCreator = new StockCreator();
         }
 
         private void AddStock(object obj)
         {
             if (this.Type != null && this.Price > 0 && this.Quantity != 0)
             {
-                var stock = this.CreateStock((StockType)this.Type, this.Price, this.Quantity);
+                var stockTypeElements = stockCollection.Count(a => a.Type == this.Type);
+                var stock = this.stockCreator.CreateStock((StockType)this.Type, this.Price, this.Quantity, stockTypeElements);
                 this.StockCollection.Add(stock);
                 this.RecalculateStockWeigth(this.StockCollection);
-                this.IsStockCreationVisibile = false;
+
                 this.ClearStockProperties();
                 this.RefreshSummary();
             }
@@ -46,68 +39,22 @@ namespace StockManager
         private void CancelStock(object obj)
         {
             this.ClearStockProperties();
-            this.IsStockCreationVisibile = false;
         }
 
-        public Stock CreateStock(StockType type, double price, int quantity)
+        private void CreateEquity(object obj)
         {
-            var marketValue = this.GenerateMarketValue(price, quantity);
-            var name = this.GenerateName(type, this.StockCollection);
-            var stockWeight = 0.0;
-            var transactionCost = this.GenerateTransactionCost(type, marketValue);
-            var colorName = this.GenerateColor(type, marketValue, transactionCost);
-            var stockToAdd = new Stock {
-                Type = type,
-                Name = name,
-                Price = price,
-                Quantity = quantity,
-                MarketValue = marketValue,
-                TransactionCost = transactionCost,
-                StockWeight = stockWeight,
-                ColorName = colorName
-            };
-            return stockToAdd;
+            this.Type = StockType.Equity;
+            this.EquityThickness = SelectedThickness;
+            this.IsStockCreationVisibile = true;
+        }
+
+        private void CreateBond(object obj)
+        {
+            this.Type = StockType.Bond;
+            this.BondThickness = SelectedThickness;
+            this.IsStockCreationVisibile = true;
         }
         
-        public String GenerateName(StockType type, ObservableCollection<Stock> stockCollection)
-        {
-            if (stockCollection != null)
-            {
-                var number = this.GenerateNumber(type, stockCollection);
-                return type.ToString() + number;
-            }
-            return String.Empty;
-        }
-
-        private int GenerateNumber(StockType type, ObservableCollection<Stock> stockCollection)
-        {
-            return stockCollection.Count(a => a.Type == type) + 1;
-        }
-
-        public double GenerateMarketValue(double price, int quantity)
-        {
-            if (price <= 0 && quantity == 0)
-                return 0;
-            return price * quantity;
-        }
-
-        public double GenerateTransactionCost(StockType type, double marketValue)
-        {
-            return type == StockType.Bond ? marketValue * 0.02 : marketValue * 0.005;
-        }
-
-        public double GenerateStockWeight(double marketValue, ObservableCollection<Stock> stockCollection)
-        {
-            if (stockCollection == null)
-                return 0;
-
-            var sum = stockCollection.Sum(a => a.MarketValue);
-            if (sum != 0)
-                return marketValue / sum * 100;
-            else
-                return 0;
-        }
-
         public ObservableCollection<Stock> RecalculateStockWeigth(ObservableCollection<Stock> stockCollection)
         {
             if (stockCollection == null)
@@ -115,25 +62,20 @@ namespace StockManager
 
             foreach (var stock in stockCollection)
             {
-                stock.StockWeight = GenerateStockWeight(stock.MarketValue, stockCollection);
+                stock.StockWeight = this.stockCreator.GenerateStockWeight(stock.MarketValue, stockCollection);
             }
             return stockCollection;
         }
-
-        public Brush GenerateColor (StockType type, double marketValue, double transactionCost)
-        {
-            var brush = Brushes.Black;
-            var tolerance = type == StockType.Bond ? 100000 : 200000;
-            if (marketValue < 0 || transactionCost > tolerance)
-                brush = Brushes.Red;
-            return brush;
-        }
+        
 
         private void ClearStockProperties()
         {
             this.Type = null;
             this.Price = 0;
             this.Quantity = 0;
+            this.IsStockCreationVisibile = false;
+            this.EquityThickness = NeutralThickness;
+            this.BondThickness = NeutralThickness;
         }
 
         private void RefreshSummary()
@@ -329,7 +271,32 @@ namespace StockManager
             get { return cancelCommand; }
             set { cancelCommand = value; }
         }
-        
+
+        private int equityThickness;
+
+        public int EquityThickness
+        {
+            get { return equityThickness; }
+            set
+            {
+                equityThickness = value;
+                OnPropertyChanged("EquityThickness");
+            }
+        }
+
+        private int bondThickness;
+
+        public int BondThickness
+        {
+            get { return bondThickness; }
+            set
+            {
+                bondThickness = value;
+                OnPropertyChanged("BondThickness");
+            }
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {

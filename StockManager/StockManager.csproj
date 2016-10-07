@@ -55,10 +55,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DelegateCommandcs.cs" />
-    <Compile Include="Helper\BoolToVisibilityConverter.cs" />
+    <Compile Include="Core\DelegateCommandcs.cs" />
+    <Compile Include="Core\BoolToVisibilityConverter.cs" />
     <Compile Include="Model\Stock.cs" />
     <Compile Include="Model\StockType.cs" />
+    <Compile Include="StockCalculations\StockCreator.cs" />
     <Compile Include="StockPanelView.xaml.cs">
       <DependentUpon>StockPanelView.xaml</DependentUpon>
     </Compile>

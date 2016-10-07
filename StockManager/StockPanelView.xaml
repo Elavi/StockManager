@@ -3,14 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:StockManager"
-             xmlns:c="clr-namespace:StockManager.Helper"
+             xmlns:core="clr-namespace:StockManager.Core"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600"
              Background="White">
     
         <Grid.Resources>
-            <c:BoolToVisibilityConverter x:Key="boolToVisibility"/>
+            <core:BoolToVisibilityConverter x:Key="boolToVisibility"/>
         </Grid.Resources>
     
         <Grid.RowDefinitions>
@@ -24,8 +23,8 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
             <TextBlock Text="Add new" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
-            <Button Content="Equity" Margin="0,0,20,0" Width="100" Height="30" Command="{Binding CreateEquityCommand}"/>
-            <Button Content="Bond" Width="100" Height="30" Command="{Binding CreateBondCommand}"/>
+        <Button Content="Equity" Margin="0,0,20,0" Width="100" Height="30" Command="{Binding CreateEquityCommand}" BorderThickness="{Binding EquityThickness}"/>
+            <Button Content="Bond" Width="100" Height="30" Command="{Binding CreateBondCommand}" BorderThickness="{Binding BondThickness}"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="0,5" HorizontalAlignment="Center" Visibility="{Binding IsStockCreationVisibile, Converter={StaticResource boolToVisibility}}">
             <TextBlock Text="Price:" VerticalAlignment="Center"/>

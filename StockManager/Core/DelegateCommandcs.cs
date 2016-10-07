@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace StockManager
+namespace StockManager.Core
 {
     public class DelegateCommand : ICommand
     {
